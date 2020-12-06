@@ -392,6 +392,10 @@ public class Scene3DBundleTool : AssetBase
         return true;
     }
 
+    /// <summary>
+    /// 上传AB包的大小
+    /// </summary>
+    /// <param name="scene_id"></param>
     public static void uploadBundleSize(string scene_id)
     {
         string root_path = Application.dataPath + "/../" + UnityInterfaceAdapter.GetStreamingAssets() + "/assetbundle/" + AssetBuildTool.OsType + "/map/" + scene_id + "/";
@@ -664,7 +668,7 @@ public class Scene3DBundleTool : AssetBase
                     {
                         if (AssetBuildTool.OsType == "android" || AssetBuildTool.OsType == "ios")
                         {
-                            uploadBundleSize(Path.GetFileNameWithoutExtension(scenePath));
+                            uploadBundleSize(Path.GetFileNameWithoutExtension(scenePath));   // 将打包后的场景大小信息通过wwwfrom和www类在update中上传只服务器，监控场景版本的异常。
                         }
                     }
                     if (mAbNameDict.ContainsKey(sceneName))
@@ -684,7 +688,7 @@ public class Scene3DBundleTool : AssetBase
             ShaderVariantsCollectionsTool.ClearShaderKeywordMap();
             ClearClearedKeyWordMat(); 
             BuildShaderVariantsCollection();
-            DeleteNoUseFile();
+            DeleteNoUseFile();                            // 删除项目StreamingAssets路径下的旧资源
             Debug.Log("Save assetbundleName to json :" + abNameJsonPath);
             StreamWriter writeJson = new StreamWriter(abNameJsonPath);
             writeJson.Write(JsonHelper.ToJson(mAbNameDict));
@@ -2015,6 +2019,7 @@ public class Scene3DBundleTool : AssetBase
             f.Value.parent = prefabGoupTrans;
             count++;
             if (count >= BundleBuildConfig.SceneConfig.transformGroupCount)
+
             {
                 DependsObject.PrefabGroup pg = GetPrefabInfo(prefabGoupTrans.gameObject);
                 depends.Add(pg);
@@ -2136,7 +2141,7 @@ public class Scene3DBundleTool : AssetBase
             {
                 for (int i = 0; i < node.childCount; ++i)
                 {
-                    CombineMeshNode(node.GetChild(i).gameObject, level);
+                    CombineMeshNode(node.GetChild(i).gameObject, level);  // 设置场景中不同质量节点下的子节点质量等级
                 }
             }
             level++;
@@ -2319,9 +2324,9 @@ public class Scene3DBundleTool : AssetBase
             GrassRoot = null;
         }
 
-        SpliteScene(root);
-        CheckSceneLodGroups(root);
-        PrefabLightmapData.GenerateLightmapInfo(root);
+        SpliteScene(root);            // 设置子节点的质量等级
+        CheckSceneLodGroups(root);     // 检查场景中模型的LOD细节级别的设置
+        PrefabLightmapData.GenerateLightmapInfo(root);  // 生成光照贴图信息
         UnityEditor.SceneManagement.EditorSceneManager.MarkSceneDirty(scene);
         EditorSceneManager.SaveScene(scene);
         AssetDatabase.Refresh();
@@ -2339,7 +2344,7 @@ public class Scene3DBundleTool : AssetBase
         Debug.Log("Begin BuildAssetBundles");
         Debug.LogFormat("Total AssetBundleNames Count = {0}", AssetDatabase.GetAllAssetBundleNames().Length);
         Debug.LogFormat("Build outputPath = {0}", outputPath);
-        BuildPipeline.BuildAssetBundles(outputPath, op, EditorUserBuildSettings.activeBuildTarget);
+        BuildPipeline.BuildAssetBundles(outputPath, op, EditorUserBuildSettings.activeBuildTarget);      // 打包当前场景资源到项目的Application.dataPath/StreamingAssets下的对应目录中
         Debug.Log("End BuildAssetBundles");
 
         AssetDatabase.Refresh();
