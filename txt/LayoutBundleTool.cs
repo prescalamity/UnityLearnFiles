@@ -101,9 +101,9 @@ public class LayoutBundleTool : AssetBase
     {
         Debug.Log("Begin LayoutBundleTool Build");
         if (!BuildLayout(platform)                            // 只要函数体有一个为假就运行if里面的语句
-            || !BuildFont(platform)
-            || !BuildUIAtlas(platform)         
-            || !BuildIcon("Assets/_Resource/Textures/UI/Icon/", platform, BundleBuildConfig.LayoutConfig.BuildIconRebuild)
+            || !BuildFont(platform)                             // 对字体打包
+            || !BuildUIAtlas(platform)                        // UI图集打包
+            || !BuildIcon("Assets/_Resource/Textures/UI/Icon/", platform, BundleBuildConfig.LayoutConfig.BuildIconRebuild)     // 打包图标
             || !BuildDynamic(platform))
         {
             Debug.Log("LayoutBundleTool Build failure！");
@@ -204,13 +204,13 @@ public class LayoutBundleTool : AssetBase
         //}
 
         List<string> UIAtlasFileList = new List<string>();
-        string UIAtlasPath = "Assets/_Resource/Prefabs/Atlas/";
+        string UIAtlasPath = "Assets/_Resource/Prefabs/Atlas/";                                           // 项目中的图集地址
         foreach (string file in FileHelper.FindFileBySuffix(UIAtlasPath, ".prefab"))
         {
             UIAtlasFileList.Add(file.Replace(".prefab", "").Replace(UIAtlasPath, ""));
         }
 
-        UIAtlasFileList.Sort();
+        UIAtlasFileList.Sort();   //图集名字集合
 
 //#if UNITY_IPHONE
 //        foreach (string atlasName in UIAtlasFileList)
@@ -225,7 +225,7 @@ public class LayoutBundleTool : AssetBase
 //        AssetDatabase.Refresh();
 //#endif
         List<string> atlasList = new List<string>();
-        foreach (string atlasName in UIAtlasFileList)
+        foreach (string atlasName in UIAtlasFileList)          // 根据图集名遍历打包图集文件
         {
             UIAtlas atl = UnityInterfaceAdapter.LoadAssetAtPath<UIAtlas>(UIAtlasPath + atlasName + ".prefab");
             // 统一使用 svn版本检测
@@ -241,9 +241,9 @@ public class LayoutBundleTool : AssetBase
                 Debug.LogError(string.Format("没有找到图集[{0}]对应的材质球，请联系程序!", atlasName));
                 return false;
             }
-            m.shader = null;
+            m.shader = null;         // 没有找到图集[{ 0}]对应的材质球
 
-            if(!atl.beWithPng)
+            if (!atl.beWithPng)
             {
                 string pngPath = Application.dataPath + "/_Resource/Prefabs/Atlas/" + atlasName + ".png";
                 //int quality, alphaQuality;
@@ -257,9 +257,9 @@ public class LayoutBundleTool : AssetBase
             }
         }
         
-        SaveAndRefreshAssets();
+        SaveAndRefreshAssets();                                // 保存刷新资源
         
-        foreach (string atl in atlasList)
+        foreach (string atl in atlasList)                        // 依次创建图集
         {
             if (!BuildAtlasBundle(atl, platform))
                 return false;
@@ -561,7 +561,7 @@ public class LayoutBundleTool : AssetBase
     {
         AssetDatabase.Refresh();
 
-        string FontBundlePath = AssetBuildTool.GetEditorBundlePath("/gui/Font/");
+        string FontBundlePath = AssetBuildTool.GetEditorBundlePath("/gui/Font/");     //输出包的路径
 
         //if (!Directory.Exists(FontBundlePath))
         //{
@@ -572,7 +572,7 @@ public class LayoutBundleTool : AssetBase
         string fontPath = "Assets/_Resource/Prefabs/Font/";
         foreach (string file in Directory.GetFiles(fontPath))
         {
-            if (file.EndsWith(".meta") || file.EndsWith(".png") || file.EndsWith(".mat") || file.EndsWith(".txt") || file.EndsWith(".asset"))
+            if (file.EndsWith(".meta") || file.EndsWith(".png") || file.EndsWith(".mat") || file.EndsWith(".txt") || file.EndsWith(".asset"))   // 
                 continue;
             string fnt = file.Replace(fontPath, "");
             fnt = fnt.Replace(".prefab", "");
@@ -920,59 +920,59 @@ public class LayoutBundleTool : AssetBase
         return result;
     }
 
-    public static void BuildOneDynamic(string dir, Dictionary<string, bool> iconlosslessList)
-    {
-        string outputPath = dir.Replace("Assets/_Resource/Textures/UI/Dynamic/", "gui/Dynamic/");
+   // public static void BuildOneDynamic(string dir, Dictionary<string, bool> iconlosslessList)
+   // {
+   //     string outputPath = dir.Replace("Assets/_Resource/Textures/UI/Dynamic/", "gui/Dynamic/");
 
-        LayoutBundleTool layout = new LayoutBundleTool();
-        if (!layout.GenDynamicConfig(dir))
-        {
-            Debug.LogError(string.Format("BuildOneDynamic {0} Error, GenDynamicConfig error", dir));
-            return;
-        }
+   //     LayoutBundleTool layout = new LayoutBundleTool();
+   //     if (!layout.GenDynamicConfig(dir))
+   //     {
+   //         Debug.LogError(string.Format("BuildOneDynamic {0} Error, GenDynamicConfig error", dir));
+   //         return;
+   //     }
 
-        layout.IconList = iconlosslessList;
-        if (layout.BuildTextureForDirectory(dir, outputPath, AssetBuildTool.BuildPlatformTarget, iconlosslessList, false))
-        {
-            foreach (string jpg in Directory.GetFiles(dir, "*.jpg", SearchOption.AllDirectories))
-            {
-                File.Delete(jpg);
-            }
-            foreach (string bytes in Directory.GetFiles(dir, "*.bytes", SearchOption.AllDirectories))
-            {
-                File.Delete(bytes);
-            }
-            string subDir = dir.Replace("Assets/_Resource/Textures/UI/Dynamic/", "");
-            string iconDir = Application.dataPath.Replace("/", "\\").Replace("Assets", UnityInterfaceAdapter.GetStreamingAssets()) + "\\assetbundle\\windows\\gui\\Dynamic\\" + subDir;
-            string[] files = Directory.GetFiles(iconDir, "*.unity3d", SearchOption.AllDirectories);
-			string[] finalFiles = new string[files.Length + 1];
-            finalFiles[0] = iconDir;
-            int i = 1;
-            foreach (string temp in files)
-            {
-                finalFiles[i] = temp;
-                ++i;
-            }
-			SVNUtils.AddFiles(files);
-            SVNUtils.CommitFiles(finalFiles, "commit dynamic");
+   //     layout.IconList = iconlosslessList;
+   //     if (layout.BuildTextureForDirectory(dir, outputPath, AssetBuildTool.BuildPlatformTarget, iconlosslessList, false))
+   //     {
+   //         foreach (string jpg in Directory.GetFiles(dir, "*.jpg", SearchOption.AllDirectories))
+   //         {
+   //             File.Delete(jpg);
+   //         }
+   //         foreach (string bytes in Directory.GetFiles(dir, "*.bytes", SearchOption.AllDirectories))
+   //         {
+   //             File.Delete(bytes);
+   //         }
+   //         string subDir = dir.Replace("Assets/_Resource/Textures/UI/Dynamic/", "");
+   //         string iconDir = Application.dataPath.Replace("/", "\\").Replace("Assets", UnityInterfaceAdapter.GetStreamingAssets()) + "\\assetbundle\\windows\\gui\\Dynamic\\" + subDir;
+   //         string[] files = Directory.GetFiles(iconDir, "*.unity3d", SearchOption.AllDirectories);
+			//string[] finalFiles = new string[files.Length + 1];
+   //         finalFiles[0] = iconDir;
+   //         int i = 1;
+   //         foreach (string temp in files)
+   //         {
+   //             finalFiles[i] = temp;
+   //             ++i;
+   //         }
+			//SVNUtils.AddFiles(files);
+   //         SVNUtils.CommitFiles(finalFiles, "commit dynamic");
 
-            files = new string[] { layout.DynamicLuaConfigFile.Replace("/", "\\") };
-			SVNUtils.AddFiles(files);
-            SVNUtils.CommitFiles(files, "commit dynamic lua config");
-        }
+   //         files = new string[] { layout.DynamicLuaConfigFile.Replace("/", "\\") };
+			//SVNUtils.AddFiles(files);
+   //         SVNUtils.CommitFiles(files, "commit dynamic lua config");
+   //     }
 
-        AssetDatabase.Refresh();
+   //     AssetDatabase.Refresh();
 
-    }
+   // }
 
     public bool BuildIcon(string parentDir, BuildTarget platform, bool rebuild = false)
     {
-        //fix_me 挺简单的逻辑 没必要用递归吧 
+        //  挺简单的逻辑 没必要用递归吧 
         //       添加版本号判断也麻烦
 
         parentDir = parentDir.Replace('\\', '/');
         
-        string bundlePath = AssetBuildTool.GetEditorBundlePath("/gui/Icon/");
+        string bundlePath = AssetBuildTool.GetEditorBundlePath("/gui/Icon/");   //打包后的ab包存放路径
 
         List<string> pngList = new List<string>();
         List<Object> objList = new List<Object>();
