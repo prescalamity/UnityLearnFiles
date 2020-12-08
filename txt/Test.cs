@@ -5,12 +5,14 @@ using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Test : MonoBehaviour {
+public class Test : MonoBehaviour
+{
 
 	Text text;
 
 	// Use this for initialization
-	void Start () {
+	void Start()
+	{
 
 		text = GameObject.Find("Text").transform.GetComponent<Text>();
 
@@ -56,67 +58,99 @@ public class Test : MonoBehaviour {
 		//print(a_bl.strrInA);
 
 
+		string textAES = "This is the string before encrypted. = ?-- 测试1208"; //明文
 
-		string strT = "This is the string before encrypted. = ?-- 测试1208";
-		print("原始字符串：" + strT);
-		strT = RSAUtil1.DESEncrypt(strT);
-		print("加密字符串："+strT);
-		strT = RSAUtil1.DESDecrypt(strT);
-		print("解码字符串：" + strT);
+        string keys = "qxgamebylugiyan1";//密钥,128位            
+
+        byte[] encryptBytes = AESEncryption.AESEncrypt(textAES, keys);
+
+        //将加密后的密文转换为Base64编码，以便显示，可以查看下结果
+
+        print("原始字符串：" + textAES);
+		print("Aes加密字符串：" + Convert.ToBase64String(encryptBytes));
+
+        //解密
+        byte[] decryptBytes = AESEncryption.AESDecrypt(encryptBytes, keys);
+
+        //将解密后的结果转换为字符串,也可以将该步骤封装在解密算法中
+        string result = Encoding.UTF8.GetString(decryptBytes);
+
+		print("Aes解码字符串：" + result);
+
+
+
+		print("==================================");
+
+
+
+        string strT = "This is the string before encrypted. = ?-- 测试1208";
+		//print("原始字符串：" + strT);
+		//strT = AesHelper.EncryptString(strT);
+		//print("Aes加密字符串：" + strT);
+		//strT = AesHelper.DecryptString(strT);
+		//print("Aes解码字符串：" + strT);
 
 		strT = "http://t16.manager.com/api/select_server.php?s_id=0&ac=init_account&game_id=1&ditch_name=16&cm=0&system_type=0&plat_user_name=点击输入帐号";
 		print(strT);
 
-		strT = RSAUtil1.DESEncrypt(strT);
+		strT = RSAUtil.DESEncrypt(strT);
 		print(strT);
-		//strT = RSAUtil1.DESDecrypt(strT);
+		//strT = RSAUtil.DESDecrypt(strT);
 		//print(strT);
 
 
 		//string cet = "ODGCfQf^PaN\KBbBggonx1JIuPHLcs5ErA0yARRR+xkr29vXuLQJPT1ERBnlPjI2MtxWtSTv2DSkmFKFSQKUA53Kp56t0l0MwigI92MALbXw/njFnYV+lp4GWtU6NrmTvkF7JkY9L3E92HrR7gEk4Co46If/xqzLSP2Uf/KzmJM9IwZuFyteQ7YwnATz3qfP1I1CgOlBgVkW7/2W5J4=";
 		System.Random rand = new System.Random();
 
-        //print("============>" + rand.Next(1, 1));
+		//print("============>" + rand.Next(1, 1));
 
-        int num;  //字符最大分成多少段
-        if (strT.Length < 1)
-        {
-            Debug.Log("错误，加密地址为空");
-            return;
-        }
-        else if (strT.Length < 2) num = 1;
-        else if (strT.Length < 4) num = 2;
-        else num = rand.Next(4, 7);
+		int num;  //字符最大分成多少段
+		if (strT.Length < 1)
+		{
+			Debug.Log("错误，加密地址为空");
+			return;
+		}
+		else if (strT.Length < 2) num = 1;
+		else if (strT.Length < 4) num = 2;
+		else num = rand.Next(4, 7);
 
-        List<StringBuilder> strList = new List<StringBuilder>();
+		List<StringBuilder> strList = new List<StringBuilder>();
 
-        for (int i = 0; i < num; i++)
-            strList.Add(new StringBuilder(GetRandomString(rand.Next(4, 8), true, true)));
+		for (int i = 0; i < num; i++)
+			strList.Add(new StringBuilder(GetRandomString(rand.Next(4, 8), true, true)));
 
 		// 字符列表排序，对应加密后的切割字符顺序
-		strList.Sort((StringBuilder sb1, StringBuilder sb2) => sb1.ToString().CompareTo(sb2.ToString()));   
+		strList.Sort((StringBuilder sb1, StringBuilder sb2) => sb1.ToString().CompareTo(sb2.ToString()));
 
-        int _index=0, _totel = 0;
-        for (int i = 0; i < strList.Count; i++)
-        {
+		int _index = 0, _totel = 0;
+		for (int i = 0; i < strList.Count; i++)
+		{
 
-			_totel = rand.Next(1, strT.Length /num);
+			_totel = rand.Next(1, strT.Length / num);
 
 			if (_index + _totel >= strT.Length || i == strList.Count - 1)   // 当剩余字符串不够切割 或者 最后字符串切割有剩余时，都全部赋值
-			{                      
+			{
 				strList[i].Append(strT.Substring(_index));
 				break;
 			}
-            else
-            {
+			else
+			{
 				strList[i].Append(strT.Substring(_index, _totel));
 			}
 			_index += _totel;
-        }
+		}
 
-		foreach(var val in strList) print(val);
+		print("======================================");
 
+		StringBuilder margeStr = new StringBuilder();
+		foreach (var val in strList) { 
+			print(val);
+			margeStr.Append(val.ToString().Split(new Char[] { '=' }, 2)[1]);
+		}
 
+		print("合并后加密的字符串：" + margeStr.ToString());
+
+		print("解码字符串：" +RSAUtil.DESDecrypt( margeStr.ToString()));
 
 	}
 
@@ -124,23 +158,23 @@ public class Test : MonoBehaviour {
 	///生成随机字符串 
 	///</summary>
 	///<param name="length">目标字符串的长度</param>
-	///<param name="useNum">是否包含数字，1=包含，默认为包含</param>
-	///<param name="useLow">是否包含小写字母，1=包含，默认为包含</param>
-	///<param name="useUpp">是否包含大写字母，1=包含，默认为包含</param>
-	///<param name="useSpe">是否包含特殊字符，1=包含，默认为不包含</param>
+	///<param name="useNum">是否包含数字，</param>
+	///<param name="useLow">是否包含小写字母，</param>
+	///<param name="useUpp">是否包含大写字母，</param>
+	///<param name="useSpe">是否包含特殊字符，</param>
 	///<param name="custom">要包含的自定义字符，直接输入要包含的字符列表</param>
 	///<returns>指定长度的随机字符串</returns>
-	public static string GetRandomString(int length=2, 
-											bool useUpp=false, 
-											bool useLow = false, 
-											bool useNum = false, 
-											bool useSpe = false, 
-											string custom="")
+	public static string GetRandomString(int length = 2,
+											bool useUpp = false,
+											bool useLow = false,
+											bool useNum = false,
+											bool useSpe = false,
+											string custom = "")
 	{
 		byte[] b = new byte[4];
 		new System.Security.Cryptography.RNGCryptoServiceProvider().GetBytes(b);
 		System.Random rand = new System.Random(BitConverter.ToInt32(b, 0));
-		StringBuilder resultString = new StringBuilder(), tempStr =new StringBuilder();
+		StringBuilder resultString = new StringBuilder(), tempStr = new StringBuilder();
 
 		if (useUpp == true) { tempStr.Append("ABCDEFGHIJKLMNOPQRSTUVWXYZ"); }
 		if (useLow == true) { tempStr.Append("abcdefghijklmnopqrstuvwxyz"); }
@@ -162,28 +196,30 @@ public class Test : MonoBehaviour {
 
 	// Update is called once per frame
 	float timer = 0;
-	void Update () {
+	void Update()
+	{
 		//timer += Time.deltaTime;
 		//if (timer >= 1f) {
 		//	timer = 0;
 		//	print("AAAAA   " + Time.frameCount);
 		//}
-		
+
 	}
 
 
 	GameObject go;
 	public void printText()
-    {
+	{
 		go = GameObject.Find("Sphere(Clone)");
 		if (go != null)
 		{
-			text.text +=  go.name+" 对象存在\n" ;
+			text.text += go.name + " 对象存在\n";
 		}
-		else {
+		else
+		{
 			text.text += "对象不存在\n";
 		}
-		
+
 
 	}
 
@@ -195,3 +231,4 @@ public class Test : MonoBehaviour {
 
 
 }
+

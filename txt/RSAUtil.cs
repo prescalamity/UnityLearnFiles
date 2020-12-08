@@ -3,7 +3,8 @@ using System.IO;
 using System.Security.Cryptography;
 using System.Text;
 
-class RSAUtil1 {
+class RSAUtil
+{
 
     /// <summary>
     /// 使用DES加密指定字符串
@@ -12,7 +13,7 @@ class RSAUtil1 {
     /// <param name="key">密钥(最大长度8)</param>
     /// <param name="IV">初始化向量(最大长度8)</param>
     /// <returns>加密后的字符串</returns>
-    public static string DESEncrypt(string encryptStr, string key="DAZZLE21", string IV= "DAZZLE@!")
+    public static string DESEncrypt(string encryptStr, string key = "DAZZLE21", string IV = "DAZZLE@!")
     {
         //将key和IV处理成8个字符
         key += "12345678";
@@ -100,3 +101,5 @@ class RSAUtil1 {
         }
     }
 }
+
+
