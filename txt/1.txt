@@ -2,3 +2,22 @@
 
 
 
+    public T GetTableLugiyan<T>(string keyy, LuaTable luaTable ,LuaState luaStatee)
+    {
+        int top = luaStatee.LuaGetTop();
+
+        try
+        {
+            luaStatee.Push(luaTable);
+            luaStatee.Push(keyy);
+            luaStatee.LuaGetTable(top + 1);
+            T ret = luaStatee.CheckValue<T>(top + 2);
+            luaStatee.LuaSetTop(top);
+            return ret;
+        }
+        catch (Exception e)
+        {
+            luaStatee.LuaSetTop(top);
+            throw e;
+        }
+    }
