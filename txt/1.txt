@@ -21,3 +21,37 @@
             throw e;
         }
     }
+
+
+
+    public void SetLanguage()
+    {
+        LuaInterface.LuaArrayTable plvName = LuaScriptMgr.Instance.lua.GetTable("plvName").ToArrayTable();
+        
+        string languType = "";
+        if (XDevice.Instance.getLocalLanguage() == "zh-CN")
+            languType = "zh";
+        else
+            languType = "en";
+
+        LuaInterface.LuaTable langValTable= GetTableLugiyan<LuaInterface.LuaTable>(languType, 
+                                                                                                                                            LuaScriptMgr.Instance.lua.GetTable("LoadingModule"), 
+                                                                                                                                            LuaScriptMgr.Instance.lua);
+
+        for (int i = 1; i <= plvName.Length; i++)
+        {
+            LuaScriptMgr.Instance.lua[plvName[i].ToString()] = langValTable[plvName[i].ToString()];
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
