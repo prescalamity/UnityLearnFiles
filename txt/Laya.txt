@@ -1,0 +1,44 @@
+### H5引擎相关概念
+
+* Laya资源加载 LoaderManager和Loader
+* LayaAir引擎核心显示类Sprite类
+* Sprite的渲染工具合集RenderSprite
+* Laya的版本管理Laya.ResourceVersion
+* sourcemap是什么
+* 什么是websocket和wss?为什么要用websocket和wss?
+* 浏览器的缓存机制
+* CacheAs静态缓存优化 https://ldc2.layabox.com/doc/?nav=zh-ts-2-2-3
+* 多线程worker https://ldc2.layabox.com/doc/?nav=zh-ts-2-1-1
+* layanative dcc热更新机制
+* ts代码编译compile.js
+* 项目发布publish.js
+* 理解Canvas渲染和Webgl渲染的渲染流程
+* 如何编译 andoird ios和小程序
+* webpack打包代码(解决微信小游戏分包)
+* LayaNative（x5）和js之间的通讯原理
+* AtlasInfoManager图集加载类的运行机制
+* 优先读取本地资源（资源打包ipa 或者apk）的运行机制
+* js错误如何上报后台
+* 熟悉场景地块的加载和卸载机制
+* 了解H2游戏资源的压缩率和帧率
+* 了解logline日志框架
+* 了解debugtool里的js钩子，以及资源统计
+
+
+
+
+### 游戏逻辑相关
+
+* 游戏入口Main.ts(new Main)   =>  new LayaMain(); /**LayaGameStart**/  游戏底层启动的入口
+* 游戏主循环window.requestAnimationFrame https://blog.csdn.net/vhwfr2u02q/article/details/79492303
+* 游戏分辨率适配(ScreenAdaptation)
+* Laya图集制作 https://ldc2.layabox.com/doc/?nav=zh-ts-3-2-0
+* LayaUI制作相关 https://ldc2.layabox.com/doc/?nav=zh-ts-3-1-0
+* UI适配(GameUIManager), UI Cache管理(UIResourceManager)
+* UI View和Dialog管理(UICreater),  View基类(H5BaseView), Dialog基类(H5BaseDialog)
+* 场景对象管理与2D地图管理(MapHelper)
+* 2D序列帧管理和创建(animationmanager.ts,animationroot.ts)
+* 设备等级分类与屏蔽策略(core/display_manager)
+* 逻辑相关配置为何为json
+* 了解游戏区别专服或者平台的配置 
+大概就这些了
