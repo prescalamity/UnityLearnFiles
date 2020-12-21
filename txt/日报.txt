@@ -1,3 +1,21 @@
+ 
+今天在学习laya项目动画池管理时，发现动画池的管理有两个池的存在，
+一个是由AnimationManager单例模式中的animation_res_pool池，主要存放AnimationResItem对象，另一个为myanimation继承ObjectPool类的m_obj_map池，存放
+开始有些不明白为什么动画管理需要两个池，后来问文森说animation_res_pool池主要用来管理图集资源，m_obj_map池则主要用来管理动画对象资源，
+而动画对象的卸载并不一定图集资源也要卸载。继续了解发现，对于一些动作较多的角色动画，在打图集时会分开，以免在加载图集时过大，把那些没用到的动作资源都加载进来，
+造成资源浪费；而对于一些动作较少的角色，在打包成图集时为减少图集文件资源的占用一般将其打包成一个图集，而此时当图集中的某个动作要销毁时，
+因为图集中包含多个角色动作图片资源，所以此时动画所在图集却不一定能卸载该资源，从而导致图集的卸载和动画的卸载是分开管理的，即animation_res_pool主要管理Laya.loader.load
+生成的图集资源的加载和卸载，而m_obj_map则主要管理Laya.Animation.loadAtlas生成动画对象。
+
+之后了解了下Laya资源加载 LoaderManager和Loader知识点。https://www.cnblogs.com/chiguozi/p/9602430.html
+其中LoaderManager是Laya加载资源的统一入口。此类是单例，且请通过Laya.loader访问。全部队列加载完成，会派发 Event.COMPLETE 完成事件；如果队列中任意一个加载失败，
+会派发 Event.ERROR 事件，事件回调参数值为加载出错的资源地址。主要提供：批量加载资源。，多线程，多优先级， 重复过滤（复用缓存），错误重试功能。
+而Laya.Loader管理laya的加载器，负责控制加载优先级，加载线程维护与上限上线控制，加载失败后重试等操作。在laya中使用的 Laya.loader.load 是LoaderManager的实例中的load，
+而不是Laya.Loader的实例的load。另外，值得注意的是不管加载成功或者失败都会出发COMPLETE事件，调用complete方法。
+
+
+====================================================================================
+
 1219主要学习laya的帧动画的创建与管理，在laya创建帧动画时，主要由美术组给出主角，npc，怪物等角色的系列动作资源图，
 然后导入laya项目laya/model/对应角色名文件夹中，并正常为按动作名+序号取名或加一层角色动作层级文件夹+动作序号，
 之后在laya编辑器的编辑模式下设置动作资源图片的属性为打包，
