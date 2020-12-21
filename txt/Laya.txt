@@ -1,6 +1,6 @@
 ### H5引擎相关概念
 
-* Laya资源加载 LoaderManager和Loader
+* Laya资源加载 LoaderManager和Loader       https://www.cnblogs.com/chiguozi/p/9602430.html
 * LayaAir引擎核心显示类Sprite类
 * Sprite的渲染工具合集RenderSprite
 * Laya的版本管理Laya.ResourceVersion
