@@ -1,7 +1,104 @@
+LanguageCtrl = LanguageCtrl or BaseClass()
+
+function LanguageCtrl:__init()
+	if LanguageCtrl.instance ~= nil then
+		error("attempt to create singleton twice!")
+	end
+	LanguageCtrl.instance = self
+end
+
+function LanguageCtrl:Instance()
+	if not LanguageCtrl.instance then
+		LanguageCtrl.New()
+	end
+
+	return LanguageCtrl.instance
+end
+
+--«Î«Û∫ÛÃ®∆¡±Œ¥ 
+-- function LanguageCtrl:RequestPlatServerFilter()
+-- 	if UserInfo.ServerConfig == nil then
+-- 		return
+-- 	end
+
+-- 	local url = UserInfo.ServerConfig.plat_admin_server
+	
+-- 	if(string.sub(url, -1) ~= "/")  then
+-- 		url = url .. "/"
+-- 	end
+-- 	url = url .. PHPConfig.PLAT_SERVER_FILTER_WORD
+
+-- 	local variables = {}
+	
+-- 	local request_call_back = function(result, state_str, parse_success, json_obj)
+-- 		if result and tonumber(state_str) == 0 and parse_success then
+-- 			LanguageFilter.server_filters = json_obj
+-- 		end
+-- 	end
+
+--     PhpNet.Instance:RequestPhp(url, false, variables, {}, request_call_back, 1)
+
+-- end
+
+
+function LanguageCtrl:RequestPlatServerFilter()
+	-- body
+	local base_url = PhpNet:Instance():GetBaseUrl()
+	local url = "out/activity/languagemask.json"
+	local request_call_back = function(result, php_str)
+		if not php_str then
+			return
+		end
+
+		local str = string.sub(php_str, 21, -2)
+		if str then
+	        local json_obj = JsonUtil.ReadJsonStr(str)
+	        if json_obj then
+				LanguageFilter.server_filters = json_obj
+			end
+		end
+	end
+
+	PhpNet:Instance():RequestPhp(base_url .. url, false, nil, nil, request_call_back, 1)	
+end
 
 
 
+local daleyFremes
+local daleyFremeRestartApp = false
 
+function LanguageCtrl:RestartApp(frameCount)
+    daleyFremeRestartApp = true
+    daleyFremes = frameCount or 1
+end
+
+function LanguageCtrl:Update()
+	if daleyFremeRestartApp  then
+        daleyFremes = daleyFremes - 1
+        if daleyFremes<1 then 
+            daleyFremeRestartApp = false
+            XDevice.restartApp();
+        end 
+    end
+end
+
+
+function LanguageCtrl:GetMutilLanguageSkin(shinKey){
+	
+	
+}
+
+
+function GetMutilLanguageSkin(skinKey)
+	if LoadingModule[application_default_language] == nil then
+		application_default_language = "en_US"
+	end
+    return LoadingModule[application_default_language][skinKey]
+end
+
+
+
+===============================================================================================================================
     public T GetTableLugiyan<T>(string keyy, LuaTable luaTable ,LuaState luaStatee)
     {
         int top = luaStatee.LuaGetTop();
