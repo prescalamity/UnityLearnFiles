@@ -1,6 +1,6 @@
 ### H5引擎相关概念
 
-* Laya资源加载 LoaderManager和Loader       https://www.cnblogs.com/chiguozi/p/9602430.html
+*** Laya资源加载 LoaderManager和Loader       https://www.cnblogs.com/chiguozi/p/9602430.html
 * LayaAir引擎核心显示类Sprite类
 * Sprite的渲染工具合集RenderSprite
 * Laya的版本管理Laya.ResourceVersion
@@ -30,15 +30,27 @@
 ### 游戏逻辑相关
 
 * 游戏入口Main.ts(new Main)   =>  new LayaMain(); /**LayaGameStart**/  游戏底层启动的入口
+
 * 游戏主循环window.requestAnimationFrame https://blog.csdn.net/vhwfr2u02q/article/details/79492303
+
 * 游戏分辨率适配(ScreenAdaptation)
-* Laya图集制作 https://ldc2.layabox.com/doc/?nav=zh-ts-3-2-0
+
+*** Laya图集制作 https://ldc2.layabox.com/doc/?nav=zh-ts-3-2-0
+
 * LayaUI制作相关 https://ldc2.layabox.com/doc/?nav=zh-ts-3-1-0
+
 * UI适配(GameUIManager), UI Cache管理(UIResourceManager)
+
 * UI View和Dialog管理(UICreater),  View基类(H5BaseView), Dialog基类(H5BaseDialog)
+
 * 场景对象管理与2D地图管理(MapHelper)
-* 2D序列帧管理和创建(animationmanager.ts,animationroot.ts)
+
+*** 2D序列帧管理和创建(animationmanager.ts,animationroot.ts)
+
 * 设备等级分类与屏蔽策略(core/display_manager)
+
 * 逻辑相关配置为何为json
+
 * 了解游戏区别专服或者平台的配置 
-大概就这些了
+
+
