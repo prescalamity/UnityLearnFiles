@@ -1,4 +1,26 @@
 
+今天主要学习了在T16项目中创建游戏动画对象，并梳理了下动画加载管理类的关系：
+
+在其对象创建过程主要经过操作有：
+1、先调用MyAnimation.Rent()接口从对象池中取出一个MyAnimation对象，该接口又通过调用ObjectPool.RentObject()接口进行对象池中对象的创建和取出；
+2、设置MyAnimation对象的名字；
+3、调用AnimationManager.AnimationLoadRes()接口并传入MyAnimation对象，动画类型，动画图集真实名，回调函数等参数，而在该接口中主要操作有：
+     （a）设置MyAnimation对象的相关参数，如动画的中心位置，动画的缩放大小，动画的帧间隔（播放速度），
+     （b）将MyAnimation对象在animation_res_pool（动画图集资源池）中注册对应的动画类型和资源名，若没有则新建AnimationResItem进行注册，
+     （c）在没有现有注册资源项时，调用Animation.loadAtlas()接口加载动画，在接口设置名字后动画自动缓存，下次根据名字从动画缓存区取出播放即可，
+4、动画加载成功后，将动画挂载到stage舞台进行显示；
+5、MyAnimation.player()播放
+6、使用完后调用MyAnimation.GiveBack()接口归还，该接口先是调用AnimationManager.SubAnimationResCount()取消animation_res_pool的注册，
+之后调用ObjectPool.GiveBackObject()将取出的MyAnimation对象重置属性后放回m_idle_key_map（空闲对象池）。
+
+不过在创建时，碰到一个加载的动画对象不存在的报错问题，在dubug测试后发现路径资源路径加载不正确，可能是项目改了文件路径，
+修改一下animation_res_config的资源路径即可正确加载动画图集了。不过之后虽然没加载报错，但场景就是就是没有先是目标动画，后来想着可能是渲染顺序问题，
+在改动画的zOrder属性后可以在场景正常播放了。
+
+
+
+================================================================================== 
+
 今天先是修改了游戏延迟重启的实现方式，不过开始使用lua全局函数传入TimerQuest:AddDelayQuest接口，发现其出现lua函数信息获取错误，
 在查看其它对该接口的引用时，发现其传递函数为函数内部的局部函数，之后改成局部函数传递后就可以正常延迟重启游戏了。
 
