@@ -26,12 +26,13 @@
 今天先是提交T16多语言简称统一代码时，不过开始打算兼容项目组的之前代码，后来文森说这样以后还要改太麻烦就改成统一的loading.lua文件中的语言简称了，
 之后在整理好多语言接口文档后叫伟航帮发布了下。不过在整理时发现有点不明白X3DGameActivity类又是干什么用的，问文森了解是项目中通过C#调用AndroidJava代码，
 传入语言参数实现游戏启动时设置当前游戏语言，以便AndroidJava方面获取玩家设置的游戏语言。
+
 于是，研究了下Unity与安卓Java的交互（https://www.xuanyusong.com/archives/667），在unity与Java的交互中，首先用eclipse等工具打包出jar包放入unity工程的
-Aessts/Plugins/Android/bin下面，并把该Java工程中res下的资源复制到Aessts/Plugins/Android中，（不过好像unity2018以后只需要把Java文件放到Aessts/Plugins下，
-然后在Inspector面板设置一下文件属性就可以了非常方便）。之后就是在C#中调用Java方法：
-1、获得Java类：AndroidJavaClass jc = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
+Aessts/Plugins/Android/bin下面，并把该Java工程中res下的资源复制到Aessts/Plugins/Android中，不过好像unity2018以后只需要把Java文件放到Aessts/Plugins下，
+然后在Inspector面板设置一下文件属性就可以了非常方便。之后就是在C#中调用Java方法：
+1、获得Java类：     AndroidJavaClass jc = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
 2、实例化Java对象： AndroidJavaObject jo = jc.GetStatic<AndroidJavaObject>("currentActivity");
-3、调用Java方法：jo.Call("JavaFunc","args");
+3、调用Java方法：   jo.Call("JavaFunc","args");
 
 =================================================================================
 
