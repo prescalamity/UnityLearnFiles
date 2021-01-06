@@ -1,4 +1,18 @@
 
+今天为了打Java语言代码修改后的jar包，安装了AndroidStudio，安装时跟着教程倒是没遇见什么问题（https://blog.csdn.net/qq_41976613/article/details/104394870），
+当然如果遇到gradle下载被墙时，也可以复制官网的下载链接并使用迅雷下载（效果明显），之后再自行安装gradle包，https://blog.csdn.net/weixin_44341427/article/details/108544987
+安装完AndroidStudio后，导入T16的u3dgame_android工程，并进行工程编译（点击编辑器上的小锤子图标），刚安装AndroidStudio编译工程时间较久，
+在编译好后可在默认生成路径查看jar包，默认生成jar包名字为classes.jar，
+
+在jar包生成好后，修改默认名字为x3dgame.jar。之后更新到项目的Assets/Plugins/Android/bin/路径下，不过为了确保jar的正确性，可用jar包的反编译工具进行查看，
+
+
+补充点小知识就是，在Java调用unity中C#函数时，可通过unity生成的unity-classes.jar中unityplayer包中的UnitySendManees()函数即可
+
+
+
+=================================================================================
+
 0105日报，验证T15项目的下发审核服接口时，又遇到了之前不同项目域名中项目名txx和manager位置顺序问题，因为有些项目中项目代码在manager前，而有些在后。导致后台在T15中返回
 mobile_config接口的plat_url字段时把项目域名中的项目名txx和manager位置顺序能错了，结果游戏用plat_url下发的错误域名时一直加载不出登录界面而卡住。在后台修改mobile_config接口后，
 T15可以正常登录游戏并获得下发的审核服状态了。经测试T13、T14、T15都可以正常获得后台下发的审核服状态。
