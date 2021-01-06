@@ -2,7 +2,7 @@
 今天为了打Java语言代码修改后的jar包，安装了AndroidStudio，安装时跟着教程倒是没遇见什么问题（https://blog.csdn.net/qq_41976613/article/details/104394870），
 当然如果遇到gradle下载被墙时，也可以复制官网的下载链接并使用迅雷下载（效果明显），之后再自行安装gradle包，https://blog.csdn.net/weixin_44341427/article/details/108544987
 安装完AndroidStudio后，导入T16的u3dgame_android工程，并进行工程编译（点击编辑器上的小锤子图标），刚安装AndroidStudio编译工程时间较久，
-在编译好后可在默认生成路径查看jar包，默认生成jar包名字为classes.jar，
+在编译好后可在默认生成路径build/intermediates/packaged-classes/debug下查看jar包，默认生成jar包名字为classes.jar，
 
 在jar包生成好后，修改默认名字为x3dgame.jar。之后更新到项目的Assets/Plugins/Android/bin/路径下，不过为了确保jar的正确性，可用jar包的反编译工具进行查看，
 
