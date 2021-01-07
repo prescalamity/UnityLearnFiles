@@ -1,4 +1,28 @@
 
+0107日报，主要实现游戏中资源的多语言功能本来是想考虑兼容游戏活动中资源的多语言功能，不过后来文森说游戏活动中使用的较少暂时不用考虑，就实现了下基本的多语言资源
+路径获取的接口。本来之前已经实现的不过放在languageCtrl中，因为在应用启动的资源加载界面中可能也要使用，但游戏中languageCtrl.lua的加载又比PlatformLoadingView.lua的要后，
+导致PlatformLoadingView不能使用多语言资源接口，所以就把该接口放在PlatformLoadingView中实现。并更新了多语言文档（网页清理浏览器缓存可见更新）。
+
+不过在改用lua的string.gsub()接口实现语言后缀插入资源名称时遇到一个小坑，就是本来想用“.”做定位器将其换成“_xx.”来达到插入语言简称后缀的目的，不过在使用该语句时出现意外，
+
+如执行语句：string.gsub("abc.xxx",  ".",  "_zh")，结果返回的不是“ abc_zh.xxx”，而是“_zhbc.xxx”。
+
+百度查了下该lua接口发现（https://blog.csdn.net/weiyuefei/article/details/52044235），该接口是支持模式匹配的，而“.”字符在模式中表示任意字符，所以才导致了上面把第一个字符“a”替换成“_zh”的结果，
+而要实现替换“.”的目标，看gsub注释可以发现可以用如下语句实现目标string.gsub("abc.xxx",  "%.",  "_zh")，返回结果“ abc_zh.xxx”
+
+string.gsub (s, pattern, repl [, n])
+
+Returns a copy of s in which all occurrences of the pattern have been replaced by a replacement string specified by repl,which may be a string, a table, or a function. 
+gsub also returns, as its second value, the total number of substitutions made.
+If repl is a string, then its value is used for replacement. 
+The character % works as an escape character: any sequence in repl of the form %n, with n between 1 and 9, stands for the value of the n-th captured substring (see below). 
+The sequence %0 stands for the whole match. The sequence %% stands for a single %.      
+-- %是作为lua中特殊的转义字符，即%%代表的是一个简单的%符号
+
+
+=================================================================================
+
+
 今天为了打Java语言代码修改后的jar包，安装了AndroidStudio，安装时跟着教程倒是没遇见什么问题（https://blog.csdn.net/qq_41976613/article/details/104394870），
 当然如果遇到gradle下载被墙时，也可以复制官网的下载链接并使用迅雷下载（效果明显），之后再自行安装gradle包，https://blog.csdn.net/weixin_44341427/article/details/108544987
 安装完AndroidStudio后，导入T16的u3dgame_android工程，并进行工程编译（点击编辑器上的小锤子图标），刚安装AndroidStudio编译工程时间较久，
