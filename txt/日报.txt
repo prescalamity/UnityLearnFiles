@@ -1,4 +1,14 @@
 
+
+0108今天继续修改多语言了文档，在经过大佬们的讨论后增加了多语言的语言简称表和目前已配置的SDK多语言库表，并根据语言简称表修改`Plugins\Android\res` 目录下SDK多语言库名称，
+在修改多语言的md文件时，文森推荐VScode插件Markdown Preview Enhanced确实挺好用的，在编写文档的同时，还可以实时查看md文档的效果。
+
+之后文森建议PlatformInterfaceManager中的language字段删除，因为PlatformInterfaceManager并不是所有SDK的类都能访问到。而且游戏设置的语言已经游戏开始时用
+Unity3DHelper.saveLanguage()接口已经保存了，同时也能用 Unity3DHelper.getLocalLanguage()进行获取。所以就把删除了，并修改了X3DGameActivity类和unity3dHleper类中对应的接口
+
+
+=================================================================================
+
 0107日报，主要实现游戏中资源的多语言功能本来是想考虑兼容游戏活动中资源的多语言功能，不过后来文森说游戏活动中使用的较少暂时不用考虑，就实现了下基本的多语言资源
 路径获取的接口。本来之前已经实现的不过放在languageCtrl中，因为在应用启动的资源加载界面中可能也要使用，但游戏中languageCtrl.lua的加载又比PlatformLoadingView.lua的要后，
 导致PlatformLoadingView不能使用多语言资源接口，所以就把该接口放在PlatformLoadingView中实现。并更新了多语言文档（网页清理浏览器缓存可见更新）。
