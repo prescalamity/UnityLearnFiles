@@ -1,11 +1,18 @@
 
-因为想看T16游戏实时性能，弄了下unity的profiler工具连接真机游戏数据调试，一般具体过程：
+
+0116日报，在通过控制可能的单个游戏角色进行游戏性能测试后，发现在有游戏“太阳神”角色上场后游戏帧率变得非常不稳定经常在15~30FPS之间波动。进一步对比测试
+游戏中当该角色有喷火的攻击特效和没有喷火特效时的游戏数据可知，没有喷火的特效的游戏帧率一般在30帧左右波动，而有喷火特效的帧率比较不稳定，尤其是在特效攻击刚出身的
+小怪时帧率经常调到15FPS左右。具体帧率如下图所示，不过感觉这解析出的趋势的图相比观察的真实数据普遍低了点，没有连接unity的Profiler工具反应的准确。
+
+而从耗时帧的耗时脚本详情看，相比一般30左右的帧率，15左右帧率耗时主要是lua脚本耗时较高。尤其是SceneBoardMgr的update()函数的耗时明显的高于正常帧，具体如下图所示。
+
+其中为通过unity的Profiler工具察看T16游戏实时性能，弄了下unity的profiler工具连接真机游戏数据调试，一般具体过程：
 1、手机用数据线连接电脑，并且手机打开usb调试。
-2、在windows命令行窗口输入SDK的adb devices命令（对于adb不是内部命令的将adb.exe路径配置到环境变量即可），查看设备连接情况，若显示没有可连接设备
-装下相关手机驱动。
-3、继续命令行输入命令：adb.exe forward tcp:34999 localabstract:Unity-com.qdazzle.t16game（34999为unity的Profiler工具的adb端口，com.qdazzle.t16game为游戏包名）
+2、在windows命令行窗口输入SDK的adb devices命令，查看设备连接情况，若显示没有可连接设备则装下相关手机驱动。
+3、继续命令行输入命令：adb forward tcp:34999 localabstract:Unity-com.qdazzle.t16game（34999为unity的Profiler工具的adb端口，com.qdazzle.t16game为游戏包名）
 4、输入命令：adb forward --list,查看端口连接状况，
-5、重启unity并打开Profiler工具窗口，点击recard和Editer按钮下选择adb即可实时观察安卓手机运行游戏的性能状态
+5、安装打好的勾选Development Build设置的游戏包，运行游戏，
+6、重启unity并打开Profiler工具窗口，点击recard和Editer按钮下选择adb即可实时观察安卓手机运行游戏的性能状态。
 
 
 =================================================================================
