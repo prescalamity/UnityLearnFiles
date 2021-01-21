@@ -1,0 +1,16 @@
+        string jsonStr = "{'ad':'hsjd和大家按时ahsj', 'bd':'hdajishdijk'}";
+
+        Dictionary<string,string> JD = JsonMapper.ToObject<Dictionary<string, string>>(jsonStr);
+
+        Debug.Log("这是Json字符串的内容：" + JD.Count + JD);
+
+        foreach (var kv in JD )
+        {
+            Debug.Log("这是Json字符串的内容："+ kv.Value.ToString());
+
+        }
+
+        JsonData dataJ = JsonMapper.ToObject(jsonStr);
+
+
+        Debug.Log("这是Json字符串的内容JsonData：" + dataJ["ad"]);
