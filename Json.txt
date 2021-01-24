@@ -1,0 +1,12 @@
+        string teststrjson = "{ \"ad\" : \"sijJ送daisj\" ,  \"bj\" : \"dsijdajo\" }";
+
+        JsonData daksjd1 = JsonMapper.ToObject<JsonData>(teststrjson);
+        JsonData daksjd2 = JsonHelper.ToObject<JsonData>(teststrjson);
+        Dictionary<string, string> daksjd3 = JsonHelper.ToObject<Dictionary<string,string>>(teststrjson);
+        djasddsa sdas= JsonHelper.ToObject<djasddsa>(teststrjson);
+
+
+        QLog.Log("字典数量1", daksjd1["ad"].ToString());
+        QLog.Log("字典数量2", daksjd2["ad"].ToString());
+        QLog.Log("字典数量3", daksjd3["ad"].ToString());
+        QLog.Log("字典数量4", sdas.ad);
