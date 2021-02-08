@@ -1,5 +1,32 @@
 
+=====================================================================================================================================
+10:04 2021/2/8
+讯飞语音同步测试
 
+需要处理：
+
+1、更新类文件
+2、msc.jar包
+3、libmsc.so
+
+4、AndroidManifest
+
+
+ <!-- 讯飞语音参数配置 -->
+        <meta-data
+            android:name="XF_KEY"
+            android:value="5717500d" />
+        <!-- 讯飞语音方言设置 -->
+        <meta-data
+            android:name="XF_LANGUAGE"
+            android:value="zh-cn" />
+        <meta-data
+            android:name="XF_ACCENT"
+            android:value="mandarin" />
+        <!-- zh-hk为繁体   zh-cn为简体 -->
+        <meta-data
+            android:name="XF_RLANG"
+            android:value="zh-cn" />
 
 =====================================================================================================================================
 9:53 2021/2/8
