@@ -1,4 +1,13 @@
 
+0220日报，看下了三维模型生成代码，ModelData为模型数据对象，其中也自然包含 三维模型 这个属性，而如代码中ObjectSpawn mObjectSpawn字段即引用目标三维模型的实例，当调用ModelDataManager中
+CreateModelData()接口进行创建时，便会对mObjectSpawn进行实例化。不过三维模型的生成和管理还是比较复杂的，因为要考虑如：模型换装需求、模型是否带动画、模型材质贴图资源的加载方式，资源缓存等因素。
+在模型加载时，首先将已打包放于AssetStreaming路径下要创建的对应模型名称参数的Bundle模型资源（如mesh、material、texture）加载到内存，而为了充分利用内存资源，需要对加载的Bundle模型资源进行复用计数管理，
+当该资源没有使用时将在一定时间后从内存中卸载。并根据不同三维模型类型需求差异使用不同资源加载模块加载，如MultiSkinObjectSpawn（带多个动画模型）、SingleSkinObjectSpawn（带单个动画模型）、
+NoSkinObjectSpawn（不带动画的模型）、PrefabObjctSpawn（Prefab模型），且将模型加载的共同接口抽出放于ObjectSpawn模块中。
+
+
+=================================================================================
+
 0219日报，主要学习C#中模型创建管理和各个接口以及GPUskin模型创建使用，首先Lua主要通过 ModelDataManager 和 ModelData 两个类中暴露的接口类操作游戏中模型的状态（当然类中被标注为
 [DoNotToLua]的属性和方法是不会暴露给lua的。例如，Lua接收信息需要创建目标模型时，调用ModelDataManager.CreateModelData()接口并传入目标模型的参数配置（如，模型类型，皮肤），
 实现C#方面创建游戏模型并回调lua函数。而为了lua等能自如操作游戏模型则需要为其提供丰富的接口则抽象出了ModelData类，包含模型各种属性获取与设置，模型渲染效果，动画播放，特效绑定，
