@@ -1,4 +1,17 @@
 
+0221日报，修了下文森反馈的T16项目iOS出包版本混淆连接报错问题，从游戏的log文件看，是后台返回的mobile_config数据在截取json格式时出现负指针的情况。因为log中没有记录后台返回的具体解码结果，
+，所以还不能确定该错误的具体原因。不过将log中的问题链接放在Unity编辑器下测试时，和正常链接返回的值是一样的，数据也正常解析获取。目测应该是某个中间混淆版本问题，先加log在等打包更新到最新
+版本有问题时再处理。
+
+之后，看了下模型附加特效的代码，因为很多模型自身都会附带炫酷的特效，所以在ModelData中也少不了模型特效属性，如：mAttachedFXListForCurrentAnim、mPlayOnceFx、mStaticFx。而模型特效
+根据作用类型不同又分为FxStickMode.Spawn（静止）FxStickMode.Follow（跟随）FxStickMode.FollowNoRotation（跟随而不旋转）FxStickMode.Spawn（跟随后静止）等，方便不同类型在创建时和更新时，
+做不同处理如 创建时挂载位置，是否在Update进行旋转操作。
+而挂载特效的创建先是调用ModelData的AttachFx（特效信息包）接口，并使用CAttachedFxManager管理器进行AttachedFX对象的池管理（哪都有对象池的事）。之后调用AttachedFX的Create（挂载点，信息包）接口
+使用FxManager的CreateParticleInstance()创建、回调和池管理ParticleInstance对象。而AttachedFX主要提供设置特效旋转，隐藏，设置闪现效果接口，以及对ParticleInstance属性实例接口的包装；
+ParticleInstance模块本身主要向外提供特效的播放、暂停、设置速度等接口。
+
+=================================================================================
+
 0220日报，看下了三维模型生成代码，ModelData为模型数据对象，其中也自然包含 三维模型 这个属性，而如代码中ObjectSpawn mObjectSpawn字段即引用目标三维模型的实例，当调用ModelDataManager中
 CreateModelData()接口进行创建时，便会对mObjectSpawn进行实例化。不过三维模型的生成和管理还是比较复杂的，因为要考虑如：模型换装需求、模型是否带动画、模型材质贴图资源的加载方式，资源缓存等因素。
 在模型加载时，首先将已打包放于AssetStreaming路径下要创建的对应模型名称参数的Bundle模型资源（如mesh、material、texture）加载到内存，而为了充分利用内存资源，需要对加载的Bundle模型资源进行复用计数管理，
