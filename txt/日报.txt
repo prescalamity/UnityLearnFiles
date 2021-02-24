@@ -14,6 +14,7 @@ ParticleInstance模块本身主要向外提供特效的播放、暂停、设置速度等接口。
 
 0220日报，看下了三维模型生成代码，ModelData为模型数据对象，其中也自然包含 三维模型 这个属性，而如代码中ObjectSpawn mObjectSpawn字段即引用目标三维模型的实例，当调用ModelDataManager中
 CreateModelData()接口进行创建时，便会对mObjectSpawn进行实例化。不过三维模型的生成和管理还是比较复杂的，因为要考虑如：模型换装需求、模型是否带动画、模型材质贴图资源的加载方式，资源缓存等因素。
+
 在模型加载时，首先将已打包放于AssetStreaming路径下要创建的对应模型名称参数的Bundle模型资源（如mesh、material、texture）加载到内存，而为了充分利用内存资源，需要对加载的Bundle模型资源进行复用计数管理，
 当该资源没有使用时将在一定时间后从内存中卸载。并根据不同三维模型类型需求差异使用不同资源加载模块加载，如MultiSkinObjectSpawn（带多个动画模型）、SingleSkinObjectSpawn（带单个动画模型）、
 NoSkinObjectSpawn（不带动画的模型）、PrefabObjctSpawn（Prefab模型），且将模型加载的共同接口抽出放于ObjectSpawn模块中。
